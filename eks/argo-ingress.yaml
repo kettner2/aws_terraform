@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-ingress
+  namespace: argocd
+  annotations:
+    # 외부에서 접근 가능하도록 인터넷 페이싱 ALB 생성
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    # EKS 환경에서 권장되는 IP 타겟 방식 사용
+    alb.ingress.kubernetes.io/target-type: ip
+    # 외부(HTTP 80)로 들어온 트래픽 처리
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    # ArgoCD 서버는 내부적으로 HTTPS를 사용하므로 백엔드 프로토콜 지정
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+spec:
+  ingressClassName: alb
+  rules:
+    # host 미지정 시 ALB DNS(*.elb.amazonaws.com)로 접근
+    # 운영 전환 시 아래 주석 해제 후 도메인 입력
+    # - host: argocd.example.com
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                # 조회하신 ArgoCD 서비스 이름
+                name: argo-cd-argocd-server
+                port:
+                  number: 443
