@@ -21,3 +21,8 @@ variable "vpc_secondary_cidr" {
   type        = string
   default     = "100.64.0.0/20"
 }
+
+variable "aws_profile" {
+  description = "AWS CLI 프로필 이름"
+  type        = string
+}

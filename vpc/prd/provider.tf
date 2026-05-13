@@ -16,5 +16,5 @@ terraform {
 # 실제 AWS 계정 연결 설정
 provider "aws" {
   region  = var.region      # variables.tf에 선언된 리전(ap-northeast-2)을 가져옴
-  profile = "stt"    # 🔥 여기에 실제 사용하시는 AWS CLI 프로필 이름을 적어주세요!
+  profile = var.aws_profile
 }
